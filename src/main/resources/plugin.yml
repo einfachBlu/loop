@@ -1,0 +1,11 @@
+name: Loop
+main: de.blu.loop.Loop
+version: 1.0.0
+author: Blu
+commands:
+  loop:
+    permission: command.loop
+  serverloop:
+    aliases:
+      - sloop
+    permission: command.serverloop

@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
+}
+
+group 'de.blu'
+version '1.0.0-SNAPSHOT'
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+jar {
+    duplicatesStrategy = 'EXCLUDE'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+repositories {
+    google()
+    mavenCentral()
+
+    // Spigot API
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+
+    // Bungeecord Chat API
+    maven { url = 'http://maven.elmakers.com/repository/' }
+
+    // Paper 1.16
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+}
+
+shadowJar.doLast {
+    File jarFile = file("${project.buildDir}/libs/${project.name}-${project.version}-all.jar")
+
+    if (!jarFile.exists()) {
+        jarFile = file("${project.buildDir}/libs/${project.name}-${project.version}.jar")
+        if (!jarFile.exists()) {
+            //println "output jarFile doesnt exist, maybe something failed with the build?"
+            return
+        }
+    }
+
+    copy {
+        from jarFile
+        into "${project.rootDir}/output/"
+
+        rename {
+            "${project.name}.jar"
+        }
+    }
+}
